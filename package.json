@@ -19,7 +19,7 @@
   "typings": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com//node-bbs-signatures.git"
+    "url": "git+https://github.com/nklomp/node-bbs-signatures.git"
   },
   "binary": {
     "module_name": "index",
