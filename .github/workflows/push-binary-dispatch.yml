@@ -9,12 +9,38 @@ on:
         description: "MacOS Binaries"
         required: true
         type: boolean
+      windows:
+        description: "Windows Binaries"
+        required: true
+        type: boolean
       linux:
         description: "Linux Binaries"
         required: true
         type: boolean
 
 jobs:
+  build_win_pub_binaries:
+    name: Publish Windows binaries for supported environments for release
+    if: ${{ github.event.inputs.windows == 'true' }}
+    timeout-minutes: 30
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+        os: [windows-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: yarn test
+      - run: yarn publish:binary
+        shell: bash
+        env:
+          NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build_macos_pub_binaries:
     name: Publish MacOS binaries for supported environments for release
     if: ${{ github.event.inputs.macos == 'true' }}
